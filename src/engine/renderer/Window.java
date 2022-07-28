@@ -1,89 +1,52 @@
 package engine.renderer;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.ContextAttribs;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
 
-import engine.io.Input;
+import engine.utils.FileLoader;
 
 public class Window {
 	
-	private long window;
-	private int width, height;
-	private String title;
-	private float r, g, b;
-	private Input input;
+	private static final int WIDTH = 1280, HEIGHT = 720;
+	private static final int FPS_CAP = 120;
+	private static float r = 0.0f, g = 0.0f, b = 0.0f;
 
-	public Window(int width, int height, String title) {
-		this.width = width;
-		this.height = height;
-		this.title = title;
-	}
-
-	public void create() {
-		windowHints();
+	public static void create() {
 		
-		if (!GLFW.glfwInit()) {
-			System.err.println("[ERROR]: Could not initialize GLFW");
-			System.exit(-1);
+		ContextAttribs attribs = new ContextAttribs(3,2)
+			.withForwardCompatible(true)
+			.withProfileCore(true);
+		
+		try {
+			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+			Display.create(new PixelFormat(), attribs);
+			Display.setTitle(FileLoader.getTitle());
+		} catch (LWJGLException e) {
+			System.err.println(String.format("[ERROR]: Failed to create window: %s", e));
 		}
 		
-		input = new Input();
-		window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
-		if (window == 0) {
-			System.err.println("[ERROR]: Could not create window");
-			System.exit(-1);
-		}
-		
-		GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-		GLFW.glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
-		
-		GLFW.glfwMakeContextCurrent(window);
-		
-		createCallbacks();
-		
-		GLFW.glfwShowWindow(window);
-		GLFW.glfwSwapInterval(1);
-		
-		GL.createCapabilities();
+		GL11.glViewport(0, 0, WIDTH, HEIGHT);
 	}
 	
-	private void createCallbacks() {
-		GLFW.glfwSetKeyCallback(window, input.getKeyboardCallback());
-		GLFW.glfwSetCursorPosCallback(window, input.getCursorPosCallback());
-		GLFW.glfwSetMouseButtonCallback(window, input.getMouseButtonCallback());
+	public static void setBackground(float r, float g, float b) {
+		Window.r = r;
+		Window.g = g;
+		Window.b = b;
 	}
 	
-	private void windowHints() {
-		GLFW.glfwDefaultWindowHints();
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
-		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
-	}
-	
-	public void setBackground(float r, float g, float b) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-	}
-	
-	public void update() {
-		GL11.glViewport(0, 0, width, height);
+	public static void update() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glClearColor(r, g, b, 1.0f);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
-		GLFW.glfwPollEvents();
-		GLFW.glfwSwapBuffers(window); 
+		Display.sync(FPS_CAP);
+		Display.update();
 	}
 	
-	public void destroy() {
-		input.destroy();
-		GLFW.glfwTerminate();
-		GLFW.glfwDestroyWindow(window);
+	public static void destroy() {
+		Display.destroy();
 	}
-	
-	public boolean shouldClose() {
-		return GLFW.glfwWindowShouldClose(window);
-	}
-}
+} 
