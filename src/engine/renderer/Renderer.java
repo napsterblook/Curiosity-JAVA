@@ -26,6 +26,7 @@ public class Renderer {
 //	}
 	
 	private static final float FOV = 60, NEAR_PLANE = 0.1f, FAR_PLANE = 1000;
+	private Window window = new Window();
 	
 	private Matrix4f projectionMatrix;
 	public Renderer(ShaderLoader shader) {
@@ -58,7 +59,7 @@ public class Renderer {
 	}
 	
 	private void createProjectionMatrix() {
-		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
+		float ratio = (float) window.getWidth() / (float) window.getHeight();
 		float y_scale = (float) ((1.0f / Math.tan(Math.toRadians(FOV / 2.0f))) * ratio);
 		float x_scale = y_scale / ratio;
 		float frustrum = FAR_PLANE - NEAR_PLANE;

@@ -27,14 +27,18 @@ public class Window {
 		this.background = background;
 	}
 	
+	//extra constructor just so that Renderer can access width and height methods
+	public Window() { }
+	
 	public void create() {
 		if (!GLFW.glfwInit()) {
 			System.err.println("[ERROR]: GLFW could not be initialized, exiting...");
 			System.exit(-1);
 		}
 		
+		//this would be version 4.6 but latest version is not supported by linux
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
-		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5); 
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		
@@ -46,10 +50,12 @@ public class Window {
 			System.exit(-1);
 		}
 		
+		//centre window on screen
 		GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		windowPosX[0] = (videoMode.width() - width) / 2;
 		windowPosY[0] = (videoMode.height() - height) / 2;
 		GLFW.glfwSetWindowPos(window, windowPosX[0], windowPosY[0]);
+		
 		GLFW.glfwMakeContextCurrent(window);
 		GL.createCapabilities();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -84,6 +90,7 @@ public class Window {
 		}
 		
 		GL11.glClearColor(background.getX(), background.getY(), background.getZ(), 1.0f);
+		//depth buffer bit is necessary to enable depth test so that vertices can render in front of each other
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GLFW.glfwPollEvents();
 		frames++;
@@ -124,10 +131,10 @@ public class Window {
 			GLFW.glfwSetWindowMonitor(window, 0, windowPosX[0], windowPosY[0], width, height, 0);
 		}
 	}
+	
+	public int getWidth() { return width; }
 
-	public static int getWidth() { return width; }
-
-	public static int getHeight() { return height; }
+	public int getHeight() { return height; }
 
 	public String getTitle() { return title; }
 

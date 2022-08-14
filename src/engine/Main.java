@@ -27,9 +27,10 @@ public class Main implements Runnable {
 	private Camera camera;
 	
 	private static final int WIDTH = 1280, HEIGHT = 720;
-	private static final Vector3f BACKGROUND = new Vector3f(1.0f, 0.0f, 0.0f);
+	private static final Vector3f BACKGROUND = new Vector3f(0.0f, 0.0f, 0.0f);
 	private static final String VERTEX_FILE = "src/engine/shaders/vertexShader.glsl",
 			FRAGMENT_FILE = "src/engine/shaders/fragmentShader.glsl";
+	private static final float MOVE_SPEED = 0.1f;
 	//TODO: Implement flexible title
 	private String os = System.getProperty("os.name");
 	
@@ -147,7 +148,7 @@ public class Main implements Runnable {
 		texture = new ModelTexture(loader.loadTexture("textures/stanley.png"));
 		texturedModel = new TexturedModel(model, texture);
 		entity = new Entity(texturedModel, new Vector3f(0.0f, 0.0f, -5.0f), 0.0f, 0.0f, 0.0f, 1.0f);
-		camera = new Camera();
+		camera = new Camera(MOVE_SPEED);
 //		mesh.create();
 	}
 	
@@ -158,7 +159,7 @@ public class Main implements Runnable {
 			if (Input.isKeyDown(GLFW.GLFW_KEY_F11))
 				window.setFullscreen(!window.isFullscreen());
 			
-			entity.rotate(1.0f, 1.0f, 1.0f);
+			entity.rotate(3.0f, 3.0f, 0.0f);
 			
 			camera.move();
 			window.update();
