@@ -1,8 +1,21 @@
 apply plugin: 'java'
 
+import org.gradle.internal.os.OperatingSystem
+
 project.ext.lwjglVersion = "3.3.1"
 project.ext.jomlVersion = "1.10.4"
-project.ext.lwjglNatives = "natives-windows"
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		break
+	case OperatingSystem.MAC_OS:
+		project.ext.lwjglNatives = "natives-macos"
+		break
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+}
 
 repositories {
 	mavenCentral()
@@ -32,5 +45,6 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+	if (lwjglNatives == "natives-macos") runtimeOnly "org.lwjgl:lwjgl-vulkan::$lwjglNatives"
 	implementation "org.joml:joml:${jomlVersion}"
 }
