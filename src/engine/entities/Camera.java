@@ -16,16 +16,16 @@ public class Camera {
 	}
 	
 	public void move() {
-		if (Input.isButtonDown(GLFW.GLFW_KEY_W))
+		if (Input.isKeyDown(GLFW.GLFW_KEY_W))
 			position.z -= 0.02f;
 		
-		if (Input.isButtonDown(GLFW.GLFW_KEY_A))
+		if (Input.isKeyDown(GLFW.GLFW_KEY_A))
 			position.x -= 0.02f;
 		
-		if (Input.isButtonDown(GLFW.GLFW_KEY_S))
+		if (Input.isKeyDown(GLFW.GLFW_KEY_S))
 			position.z += 0.02f;
 		
-		if (Input.isButtonDown(GLFW.GLFW_KEY_D))
+		if (Input.isKeyDown(GLFW.GLFW_KEY_D))
 			position.x += 0.02f;
 	}
 

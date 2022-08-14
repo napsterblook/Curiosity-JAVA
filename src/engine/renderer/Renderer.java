@@ -27,11 +27,11 @@ public class Renderer {
 	
 	private static final float FOV = 60, NEAR_PLANE = 0.1f, FAR_PLANE = 1000;
 	
-	private Matrix4f viewMatrix;
+	private Matrix4f projectionMatrix;
 	public Renderer(ShaderLoader shader) {
-		createViewMatrix();
+		createProjectionMatrix();
 		shader.start();
-		shader.loadViewMatrix(viewMatrix);
+		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
@@ -57,18 +57,18 @@ public class Renderer {
 		GL30.glBindVertexArray(0);
 	}
 	
-	private void createViewMatrix() {
+	private void createProjectionMatrix() {
 		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
 		float y_scale = (float) ((1.0f / Math.tan(Math.toRadians(FOV / 2.0f))) * ratio);
 		float x_scale = y_scale / ratio;
 		float frustrum = FAR_PLANE - NEAR_PLANE;
 		
-		viewMatrix = new Matrix4f();
-		viewMatrix.m00 = x_scale;
-		viewMatrix.m11 = y_scale;
-		viewMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustrum);
-		viewMatrix.m23 = -1.0f;
-		viewMatrix.m32 = -((2.0f * NEAR_PLANE * FAR_PLANE) / frustrum);
-		viewMatrix.m33 = 0.0f;
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.m00 = x_scale;
+		projectionMatrix.m11 = y_scale;
+		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustrum);
+		projectionMatrix.m23 = -1.0f;
+		projectionMatrix.m32 = -((2.0f * NEAR_PLANE * FAR_PLANE) / frustrum);
+		projectionMatrix.m33 = 0.0f;
 	}
 }

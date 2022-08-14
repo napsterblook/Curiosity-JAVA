@@ -2,6 +2,7 @@ package engine;
 
 import org.lwjgl.glfw.GLFW;
 
+import engine.entities.Camera;
 import engine.entities.Entity;
 import engine.graphics.Window;
 import engine.io.Input;
@@ -23,6 +24,7 @@ public class Main implements Runnable {
 	private Entity entity;
 	private Renderer renderer;
 	private ModelLoader loader;
+	private Camera camera;
 	
 	private static final int WIDTH = 1280, HEIGHT = 720;
 	private static final Vector3f BACKGROUND = new Vector3f(1.0f, 0.0f, 0.0f);
@@ -41,23 +43,83 @@ public class Main implements Runnable {
 //			0, 3, 2
 //		});
 	
-	private float[] vertices = {
-			-0.5f,  0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f,  0.5f, 0.0f,
+	float[] vertices = {			
+			-0.5f,0.5f,-0.5f,	
+			-0.5f,-0.5f,-0.5f,	
+			0.5f,-0.5f,-0.5f,	
+			0.5f,0.5f,-0.5f,		
+			
+			-0.5f,0.5f,0.5f,	
+			-0.5f,-0.5f,0.5f,	
+			0.5f,-0.5f,0.5f,	
+			0.5f,0.5f,0.5f,
+			
+			0.5f,0.5f,-0.5f,	
+			0.5f,-0.5f,-0.5f,	
+			0.5f,-0.5f,0.5f,	
+			0.5f,0.5f,0.5f,
+			
+			-0.5f,0.5f,-0.5f,	
+			-0.5f,-0.5f,-0.5f,	
+			-0.5f,-0.5f,0.5f,	
+			-0.5f,0.5f,0.5f,
+			
+			-0.5f,0.5f,0.5f,
+			-0.5f,0.5f,-0.5f,
+			0.5f,0.5f,-0.5f,
+			0.5f,0.5f,0.5f,
+			
+			-0.5f,-0.5f,0.5f,
+			-0.5f,-0.5f,-0.5f,
+			0.5f,-0.5f,-0.5f,
+			0.5f,-0.5f,0.5f
+			
 	};
 	
-	private int[] indices = {
-			0, 1, 3,
-			3, 1, 2
+	float[] textureCoords = {
+			
+			0,0,
+			0,1,
+			1,1,
+			1,0,			
+			0,0,
+			0,1,
+			1,1,
+			1,0,			
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0,
+			0,0,
+			0,1,
+			1,1,
+			1,0
+
+			
 	};
 	
-	private float[] textureCoords = {
-			0, 0,
-			0, 1,
-			1, 1,
-			1, 0
+	int[] indices = {
+			0,1,3,	
+			3,1,2,	
+			4,5,7,
+			7,5,6,
+			8,9,11,
+			11,9,10,
+			12,13,15,
+			15,13,14,	
+			16,17,19,
+			19,17,18,
+			20,21,23,
+			23,21,22
+
 	};
 	
 	public void run() {
@@ -84,7 +146,8 @@ public class Main implements Runnable {
 		model = loader.appendVAO(vertices, textureCoords, indices);
 		texture = new ModelTexture(loader.loadTexture("textures/stanley.png"));
 		texturedModel = new TexturedModel(model, texture);
-		entity = new Entity(texturedModel, new Vector3f(0.0f, 0.0f, -1.0f), 0.0f, 0.0f, 0.0f, 1.0f);
+		entity = new Entity(texturedModel, new Vector3f(0.0f, 0.0f, -5.0f), 0.0f, 0.0f, 0.0f, 1.0f);
+		camera = new Camera();
 //		mesh.create();
 	}
 	
@@ -95,14 +158,13 @@ public class Main implements Runnable {
 			if (Input.isKeyDown(GLFW.GLFW_KEY_F11))
 				window.setFullscreen(!window.isFullscreen());
 			
-			if (entity.getPosition().getZ() < -10.0f)
-				entity.transform(0.1f, 0, 0);
-			else
-				entity.transform(0, 0, -0.1f);
+			entity.rotate(1.0f, 1.0f, 1.0f);
 			
+			camera.move();
 			window.update();
 			
 			shader.start();
+			shader.loadViewMatrix(camera);
 			renderer.render(entity, shader);
 			shader.stop();
 			
