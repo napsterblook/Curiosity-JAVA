@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL30;
 
 import engine.entities.Entity;
 import engine.graphics.Window;
+import engine.maths.Maths;
 import engine.maths.Matrix4f;
 import engine.models.BaseModel;
 import engine.models.TexturedModel;
-import engine.utils.Maths;
 import engine.utils.ShaderLoader;
 
 public class Renderer {

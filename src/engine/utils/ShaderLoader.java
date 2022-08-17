@@ -1,6 +1,7 @@
 package engine.utils;
 
 import engine.entities.Camera;
+import engine.maths.Maths;
 import engine.maths.Matrix4f;
 import engine.shaders.ShaderProgram;
 

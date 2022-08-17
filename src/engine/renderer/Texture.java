@@ -16,7 +16,7 @@ public class Texture {
 	
 	public static int loadTexture(String texture) {
 		if (idMap.containsKey(texture))
-			return idMap.get("res/" + texture);
+			return idMap.get("res/textures/" + texture);
 		
 		int width;
 		int height;
@@ -28,8 +28,8 @@ public class Texture {
 			IntBuffer channels = stack.mallocInt(1);
 			
 			@SuppressWarnings("unused")
-			URL url = Texture.class.getResource("res/" + texture);
-			File file = new File("res/" + texture);
+			URL url = Texture.class.getResource("res/textures/" + texture);
+			File file = new File("res/textures/" + texture);
 			String filePath = file.getAbsolutePath();
 			buffer = STBImage.stbi_load(filePath, w, h, channels, 4);
 			
