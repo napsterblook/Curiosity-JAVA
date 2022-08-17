@@ -135,7 +135,7 @@ public class Main implements Runnable {
 		shader = new ShaderLoader(VERTEX_FILE, FRAGMENT_FILE);
 		renderer = new Renderer(shader);
 		loader = new ModelLoader();
-		model = OBJLoader.loadObj("dragon", loader);
+		model = OBJLoader.loadObj("stall2.0", loader);
 		texture = new ModelTexture(loader.loadTexture("test.png"));
 		texturedModel = new TexturedModel(model, texture);
 		entity = new Entity(texturedModel, new Vector3f(0.0f, 0.0f, -50.0f), 0.0f, 0.0f, 0.0f, 1.0f);
