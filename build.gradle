@@ -35,6 +35,7 @@ dependencies {
 	implementation "org.lwjgl:lwjgl-par"
 	implementation "org.lwjgl:lwjgl-stb"
 	implementation "org.lwjgl:lwjgl-vulkan"
+	implementation "com.esotericsoftware:kryonet:2.22.0-RC1"
 	runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-bgfx::$lwjglNatives"

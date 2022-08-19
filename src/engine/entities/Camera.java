@@ -2,15 +2,17 @@ package engine.entities;
 
 import org.lwjgl.glfw.GLFW;
 
+import engine.Main;
 import engine.io.Input;
 import engine.maths.Vector3f;
 
 public class Camera {
 	private Vector3f position = new Vector3f(0.0f, 0.0f, 0.0f);
-	private float pitch, yaw, roll, moveSpeed;
+	private float pitch, yaw, roll, moveSpeed, sprintSpeed;
 	
-	public Camera(float moveSpeed) {
+	public Camera(float moveSpeed, float sprintSpeed) {
 		this.moveSpeed = moveSpeed;
+		this.sprintSpeed = sprintSpeed;
 	}
 	
 	public void move() {
@@ -29,8 +31,14 @@ public class Camera {
 		if (Input.isKeyDown(GLFW.GLFW_KEY_SPACE))
 			position.y += moveSpeed;
 		
-		if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
+		if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
 			position.y -= moveSpeed;
+		
+		if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
+			moveSpeed = sprintSpeed;
+			
+		if (Input.isKeyReleased(GLFW.GLFW_KEY_LEFT_SHIFT))
+			moveSpeed = Main.MOVE_SPEED;
 	}
 
 	public Vector3f getPosition() {

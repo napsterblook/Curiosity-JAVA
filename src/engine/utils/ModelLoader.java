@@ -20,17 +20,19 @@ public class ModelLoader {
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 	
-	public BaseModel appendVAO(float[] positions, float[] textureCoords, int[] indices) {
+	public BaseModel appendVAO(float[] positions, float[] textureCoords, float[] normals,
+			int[] indices) {
 		int vao = createVAO();
 		bindIndicesBuffer(indices);
 		appendList(0, 3, positions);
 		appendList(1, 2, textureCoords);
+		appendList(2, 3, normals);
 		unbind();
 		return new BaseModel(vao, indices.length);
 	}
 	
-	public int loadTexture(String file) {
-		int texture = Texture.loadTexture(file);
+	public int loadPNG(String file) {
+		int texture = Texture.loadTexture(String.format("%s.png", file));
 		textures.add(texture);
 		return texture;
 	}

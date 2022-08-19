@@ -96,7 +96,7 @@ public class Window {
 		frames++;
 		
 		if (System.currentTimeMillis() > time + 1000) {
-			GLFW.glfwSetWindowTitle(window, title + " | FPS: " + frames);
+			GLFW.glfwSetWindowTitle(window, String.format("%1$s | FPS: %2$s", title, frames));
 			time = System.currentTimeMillis();
 			frames = 0;
 		}
@@ -127,9 +127,8 @@ public class Window {
 		if (isFullscreen) {
 			GLFW.glfwGetWindowPos(window, windowPosX, windowPosY);
 			GLFW.glfwSetWindowMonitor(window, GLFW.glfwGetPrimaryMonitor(), 0, 0, width, height, 0);
-		} else {
+		} else
 			GLFW.glfwSetWindowMonitor(window, 0, windowPosX[0], windowPosY[0], width, height, 0);
-		}
 	}
 	
 	public int getWidth() { return width; }
