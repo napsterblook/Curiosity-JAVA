@@ -23,13 +23,15 @@ public abstract class ShaderProgram {
 		this.vertexShader = loadShader(vertexShader, GL20.GL_VERTEX_SHADER);
 		this.fragmentShader = loadShader(fragmentShader, GL20.GL_FRAGMENT_SHADER);
 		program = GL20.glCreateProgram();
-		GL20.glAttachShader(program, this.vertexShader);
-		GL20.glAttachShader(program, this.fragmentShader);
+		GL20.glAttachShader(program, this.getVertexShader());
+		GL20.glAttachShader(program, this.getFragmentShader());
 		bindAttribs();
 		GL20.glLinkProgram(program);
 		GL20.glValidateProgram(program);
 		getUniformLocations();
 	}
+	
+	public ShaderProgram() {}
 	
 	protected abstract void getUniformLocations();
 	
@@ -47,10 +49,10 @@ public abstract class ShaderProgram {
 	
 	public void destroy() {
 		stop();
-		GL20.glDetachShader(program, vertexShader);
-		GL20.glDetachShader(program, fragmentShader);
-		GL20.glDeleteShader(vertexShader);
-		GL20.glDeleteShader(fragmentShader);
+		GL20.glDetachShader(program, getVertexShader());
+		GL20.glDetachShader(program, getFragmentShader());
+		GL20.glDeleteShader(getVertexShader());
+		GL20.glDeleteShader(getFragmentShader());
 		GL20.glDeleteProgram(program);
 	}
 	
@@ -107,5 +109,13 @@ public abstract class ShaderProgram {
 		}
 		
 		return shader;
+	}
+
+	public int getVertexShader() {
+		return vertexShader;
+	}
+
+	public int getFragmentShader() {
+		return fragmentShader;
 	}
 }

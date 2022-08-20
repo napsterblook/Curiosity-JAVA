@@ -1,5 +1,8 @@
 package engine.renderer;
 
+import java.util.List;
+import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -16,49 +19,53 @@ import engine.textures.ModelTexture;
 import engine.utils.ShaderLoader;
 
 public class Renderer {
-//	public void renderMesh(Mesh mesh) {
-//		GL30.glBindVertexArray(mesh.getVAO());
-//		GL30.glEnableVertexAttribArray(0);
-//		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.getIBO());
-//		GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getIndices().length, GL11.GL_UNSIGNED_INT, 0);
-//		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-//		GL30.glDisableVertexAttribArray(0);
-//		GL30.glBindVertexArray(0);
-//	}
-	
 	private static final float FOV = 60, NEAR_PLANE = 0.1f, FAR_PLANE = 1000;
 	private Window window = new Window();
 	
 	private Matrix4f projectionMatrix;
+	
+	private ShaderLoader shader;
+	
 	public Renderer(ShaderLoader shader) {
-//		GL11.glEnable(GL11.GL_CULL_FACE);
-//		GL11.glCullFace(GL11.GL_BACK);
+		this.shader = shader;
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
 		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
-	public void render(Entity entity, ShaderLoader shader) {
-		TexturedModel model = entity.getModel();
-		BaseModel baseModel = model.getBaseModel();
-		
-		GL30.glBindVertexArray(baseModel.getVao());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
-		
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
-				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-		
-		shader.loadTransformationMatrix(transformationMatrix);
-		ModelTexture texture = model.getTexture();
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-		
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, baseModel.getVao());
-		GL11.glDrawElements(GL11.GL_TRIANGLES, baseModel.getVertices(), GL11.GL_UNSIGNED_INT, 0);
+	public void render(Map<TexturedModel, List<Entity>> entities) {
+		for (TexturedModel model: entities.keySet())
+		{
+			List<Entity> batch = entities.get(model);
+			
+			for (Entity entity: batch) {
+				BaseModel baseModel = model.getBaseModel();
+				
+				GL30.glBindVertexArray(baseModel.getVao());
+				GL20.glEnableVertexAttribArray(0);
+				GL20.glEnableVertexAttribArray(1);
+				GL20.glEnableVertexAttribArray(2);
+				
+				Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
+						entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+				
+				shader.loadTransformationMatrix(transformationMatrix);
+				ModelTexture texture = model.getTexture();
+				shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+				
+				GL13.glActiveTexture(GL13.GL_TEXTURE0);
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+				GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, baseModel.getVao());
+				GL11.glDrawElements(GL11.GL_TRIANGLES, baseModel.getVertices(), GL11.GL_UNSIGNED_INT, 0);
+				unbind();
+			}
+		}
+	}
+	
+	private void unbind() {
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 		
 		GL20.glDisableVertexAttribArray(0);

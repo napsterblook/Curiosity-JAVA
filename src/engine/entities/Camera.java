@@ -8,11 +8,12 @@ import engine.maths.Vector3f;
 
 public class Camera {
 	private Vector3f position = new Vector3f(0.0f, 0.0f, 0.0f);
-	private float pitch, yaw, roll, moveSpeed, sprintSpeed;
+	private float pitch, yaw, roll, moveSpeed, sprintSpeed, crouchSpeed;
 	
-	public Camera(float moveSpeed, float sprintSpeed) {
+	public Camera(float moveSpeed, float sprintSpeed, float crouchSpeed) {
 		this.moveSpeed = moveSpeed;
 		this.sprintSpeed = sprintSpeed;
+		this.crouchSpeed = crouchSpeed;
 	}
 	
 	public void move() {
@@ -37,8 +38,11 @@ public class Camera {
 		if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
 			moveSpeed = sprintSpeed;
 			
-		if (Input.isKeyReleased(GLFW.GLFW_KEY_LEFT_SHIFT))
+		if (Input.isKeyReleased(GLFW.GLFW_KEY_LEFT_SHIFT) && Input.isKeyReleased(GLFW.GLFW_KEY_V))
 			moveSpeed = Main.MOVE_SPEED;
+		
+		if (Input.isKeyDown(GLFW.GLFW_KEY_V))
+			moveSpeed = crouchSpeed;
 	}
 
 	public Vector3f getPosition() {

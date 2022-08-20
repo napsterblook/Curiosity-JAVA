@@ -19,6 +19,8 @@ public class ShaderLoader extends ShaderProgram {
 	public ShaderLoader(String vertexShader, String fragmentShader) {
 		super(vertexShader, fragmentShader);
 	}
+	
+	public ShaderLoader() {}
 
 	@Override
 	protected void bindAttribs() {
