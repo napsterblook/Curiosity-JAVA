@@ -36,7 +36,7 @@ public class Window {
 			System.exit(-1);
 		}
 		
-		//this would be version 4.6 but latest version is not supported by linux
+		//this would be version 4.6 but latest version is not supported by most unix os
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5); 
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
@@ -130,6 +130,13 @@ public class Window {
 		} else
 			GLFW.glfwSetWindowMonitor(window, 0, windowPosX[0], windowPosY[0], width, height, 0);
 	}
+	
+//	public void setIcon(Texture icon) {
+//		GLFWImage image = GLFWImage.malloc(); GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+//        image.set(icon.getWidth(), icon.getHeight(), icon.getTextureID());
+//        imagebf.put(0, image);
+//        GLFW.glfwSetWindowIcon(window, imagebf);
+//	}
 	
 	public int getWidth() { return width; }
 

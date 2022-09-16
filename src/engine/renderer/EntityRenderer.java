@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import engine.entities.Entity;
-import engine.graphics.Window;
 import engine.maths.Maths;
 import engine.maths.Matrix4f;
 import engine.models.BaseModel;
@@ -18,19 +17,11 @@ import engine.models.TexturedModel;
 import engine.textures.ModelTexture;
 import engine.utils.ShaderLoader;
 
-public class Renderer {
-	private static final float FOV = 60, NEAR_PLANE = 0.1f, FAR_PLANE = 1000;
-	private Window window = new Window();
-	
-	private Matrix4f projectionMatrix;
-	
+public class EntityRenderer {
 	private ShaderLoader shader;
 	
-	public Renderer(ShaderLoader shader) {
+	public EntityRenderer(ShaderLoader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
-		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
@@ -72,20 +63,5 @@ public class Renderer {
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
-	}
-	
-	private void createProjectionMatrix() {
-		float ratio = (float) window.getWidth() / (float) window.getHeight();
-		float y_scale = (float) ((1.0f / Math.tan(Math.toRadians(FOV / 2.0f))) * ratio);
-		float x_scale = y_scale / ratio;
-		float frustrum = FAR_PLANE - NEAR_PLANE;
-		
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustrum);
-		projectionMatrix.m23 = -1.0f;
-		projectionMatrix.m32 = -((2.0f * NEAR_PLANE * FAR_PLANE) / frustrum);
-		projectionMatrix.m33 = 0.0f;
 	}
 }

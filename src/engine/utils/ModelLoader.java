@@ -32,7 +32,8 @@ public class ModelLoader {
 	}
 	
 	public int loadPNG(String file) {
-		int texture = Texture.loadTexture(String.format("%s.png", file));
+		Texture textureLoader = new Texture();
+		int texture = textureLoader.loadTexture(String.format("%s.png", file));
 		textures.add(texture);
 		return texture;
 	}
