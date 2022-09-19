@@ -1,13 +1,14 @@
 package engine.graphics;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import engine.io.Input;
-import engine.maths.Vector3f;
+import engine.inputs.Input;
+import engine.loaders.TextureLoader;
 
 public class Window {
 	private static int width, height, frames;
@@ -15,14 +16,15 @@ public class Window {
 	private long window;
 	private static long time;
 	private Input input;
-	private Vector3f background;
+	private Colour background;
 	private GLFWWindowSizeCallback sizeCallback;
 	private boolean isResized, isFullscreen;
 	private int[] windowPosX = new int[1], windowPosY = new int[1];
 	
-	public Window(int width, int height, Vector3f background, String title) {
-		Window.width = width;
-		Window.height = height;
+	public Window(Resolution res, Colour background, String title) {
+		width = (int) res.getW();
+		height = (int) res.getH();
+		
 		this.title = title;
 		this.background = background;
 	}
@@ -89,7 +91,7 @@ public class Window {
 			isResized = false;
 		}
 		
-		GL11.glClearColor(background.getX(), background.getY(), background.getZ(), 1.0f);
+		GL11.glClearColor(background.getR(), background.getG(), background.getB(), background.getA());
 		//depth buffer bit is necessary to enable depth test so that vertices can render in front of each other
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GLFW.glfwPollEvents();
@@ -131,12 +133,16 @@ public class Window {
 			GLFW.glfwSetWindowMonitor(window, 0, windowPosX[0], windowPosY[0], width, height, 0);
 	}
 	
-//	public void setIcon(Texture icon) {
-//		GLFWImage image = GLFWImage.malloc(); GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
-//        image.set(icon.getWidth(), icon.getHeight(), icon.getTextureID());
-//        imagebf.put(0, image);
-//        GLFW.glfwSetWindowIcon(window, imagebf);
-//	}
+	public void setLocked(boolean locked) {
+		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, locked? GLFW.GLFW_CURSOR_DISABLED: GLFW.GLFW_CURSOR_NORMAL);
+	}
+	
+	public void setIcon(TextureLoader texture) {
+		GLFWImage image = GLFWImage.malloc(); GLFWImage.Buffer buffer = GLFWImage.malloc(1);
+		image.set(texture.getWidth(), texture.getHeight(), texture.getImage());
+		buffer.put(0, image);
+		GLFW.glfwSetWindowIcon(window, buffer);
+	}
 	
 	public int getWidth() { return width; }
 

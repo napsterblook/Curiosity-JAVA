@@ -3,7 +3,7 @@ package engine.shaders;
 import engine.entities.Camera;
 import engine.entities.Light;
 import engine.maths.Maths;
-import engine.maths.Matrix4f;
+import engine.maths.vector.Matrix4f;
 
 public class TerrainShader extends ShaderProgram {
 	private int location_transformationMatrix;

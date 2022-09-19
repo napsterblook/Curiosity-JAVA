@@ -1,8 +1,9 @@
 package engine.entities;
 
-import engine.maths.Vector3f;
-import engine.models.TexturedModel;
+import org.joml.Vector3f;
 
+import engine.models.TexturedModel;
+ 
 public class Entity {
 	private TexturedModel model;
 	private Vector3f position;

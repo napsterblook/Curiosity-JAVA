@@ -1,6 +1,6 @@
 package engine.renderer;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +11,11 @@ import engine.entities.Camera;
 import engine.entities.Entity;
 import engine.entities.Light;
 import engine.graphics.Window;
-import engine.maths.Matrix4f;
+import engine.loaders.ShaderLoader;
+import engine.maths.vector.Matrix4f;
 import engine.models.TexturedModel;
 import engine.shaders.TerrainShader;
 import engine.terrain.Terrain;
-import engine.utils.ShaderLoader;
 
 public class MasterRenderer {
 	private ShaderLoader shader;
@@ -30,8 +30,7 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 
-	public MasterRenderer(float fov, float nearPlane, float farPlane, String vertexFile,
-			String fragmentFile, String terrainVertexFile, String terrainFragmentFile) {
+	public MasterRenderer(float fov, float nearPlane, float farPlane, List<String> shaderFiles) {
 		this.fov = fov;
 		this.nearPlane = nearPlane;
 		this.farPlane = farPlane;
@@ -40,10 +39,19 @@ public class MasterRenderer {
 		GL11.glCullFace(GL11.GL_BACK);
 		createProjectionMatrix();
 		
-		shader = new ShaderLoader(vertexFile, fragmentFile);
-		terrainShader = new TerrainShader(terrainVertexFile, terrainFragmentFile);
+		shader = new ShaderLoader(shaderFiles.get(0), shaderFiles.get(1));
+		terrainShader = new TerrainShader(shaderFiles.get(2), shaderFiles.get(3));
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+	}
+	
+	public static void enableCulling() {
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BACK);
+	}
+	
+	public static void disableCulling() {
+		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 
 	public void render(Light sun, Camera camera) {

@@ -5,12 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import engine.maths.Matrix4f;
-import engine.maths.Vector3f;
+import engine.Main;
+import engine.graphics.Colour;
+import engine.maths.vector.Matrix4f;
 
 public abstract class ShaderProgram {
 	private int program;
@@ -70,6 +73,14 @@ public abstract class ShaderProgram {
 		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
 	}
 	
+	protected void loadColour(int location, Colour colour) {
+		GL20.glUniform3f(location, colour.getR(), colour.getG(), colour.getB());
+	}
+	
+	protected void load2DVector(int location, Vector2f vector) {
+		GL20.glUniform2f(location, vector.x, vector.y);
+	}
+	
 	protected void loadMatrix(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
@@ -89,6 +100,12 @@ public abstract class ShaderProgram {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line;
+			int ver = 460;
+			
+			if (!Main.OS.contains("Windows"))
+				ver = 450;
+			shaderSource.append(String.format("#version %s\n\n", ver));
+			
 			while ((line = reader.readLine()) != null)
 				shaderSource.append(line).append("\n");
 			reader.close();

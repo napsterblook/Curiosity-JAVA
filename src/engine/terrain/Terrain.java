@@ -1,8 +1,8 @@
 package engine.terrain;
 
+import engine.loaders.ModelLoader;
 import engine.models.BaseModel;
 import engine.textures.ModelTexture;
-import engine.utils.ModelLoader;
 
 public class Terrain {
 	private float size, x, z;

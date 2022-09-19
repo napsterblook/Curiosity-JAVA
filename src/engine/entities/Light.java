@@ -1,6 +1,6 @@
 package engine.entities;
 
-import engine.maths.Vector3f;
+import org.joml.Vector3f;
 
 public class Light {
 	private Vector3f position;

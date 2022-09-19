@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import engine.maths.Maths;
-import engine.maths.Matrix4f;
-import engine.maths.Vector3f;
+import engine.maths.vector.Matrix4f;
+import engine.maths.vector.Vector3f;
 import engine.models.BaseModel;
 import engine.shaders.TerrainShader;
 import engine.terrain.Terrain;
